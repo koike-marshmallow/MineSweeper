@@ -1,7 +1,7 @@
 package com.example.ryokun.minesweeper.drawer;
 
 public class MineBoardDrawer {
-  public static char[] NUMBERS = ['１', '２', '３', '４', '５', '６', '７', '８'];
+  public static char[] NUMBERS = {'１', '２', '３', '４', '５', '６', '７', '８'};
   public static char ZERO = '０';
   public static char BOMB = '＊';
   public static char FLAG = '＃';
@@ -32,7 +32,7 @@ public class MineBoardDrawer {
       }
       return NUMBERS[(num - 1) % NUMBERS.length];
     }
-    if( board.isCellFlag(x, y) ){
+    if( board.getCellFlag(x, y) ){
       return FLAG;
     }
     return UNOPENED;

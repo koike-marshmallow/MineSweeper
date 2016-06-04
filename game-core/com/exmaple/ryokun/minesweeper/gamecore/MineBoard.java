@@ -1,6 +1,9 @@
 package com.example.ryokun.minesweeper.gamecore;
 
-public class MineBoard{
+import com.example.ryokun.minesweeper.drawer.MineBoardDrawable;
+
+public class MineBoard
+implements MineBoardDrawable{
   static int[] VEC_X = {-1,  0,  1,  1,  1,  0, -1, -1};
   static int[] VEC_Y = {-1, -1, -1,  0,  1,  1,  1,  0};
   static int VEC_LENGTH = Math.min(VEC_X.length, VEC_Y.length);
@@ -185,5 +188,20 @@ public class MineBoard{
       }
     }
     return count;
+  }
+
+
+  //interface extended
+  public int getCellNumber(int x, int y){
+    return inBound(x, y) ? get(x, y).getNumber() : -1;
+  }
+  public boolean getCellFlag(int x, int y){
+    return inBound(x, y) ? get(x, y).getFlag() : false;
+  }
+  public boolean isCellBomb(int x, int y){
+    return inBound(x, y) ? get(x, y).isBomb() : false;
+  }
+  public boolean isCellOpen(int x, int y){
+    return inBound(x, y) ? get(x, y).isOpen() : false;
   }
 }
