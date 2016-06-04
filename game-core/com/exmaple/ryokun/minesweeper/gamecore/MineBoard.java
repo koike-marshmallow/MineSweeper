@@ -12,14 +12,14 @@ public class MineBoard{
   public static final int GAMEOVER = 104;
   public static final int OUTOFBOUNDS = 105;
 
-  private MineBoard[][] board;
+  private MineCell[][] board;
 
   public void init(int w, int h){
     if( w > 0 && h > 0 ){
-      board = new MineBoard[h][w];
-      for(MineBoard[] row : board){
-        for(MineBoard cell : row){
-          cell = new MineBoard();
+      board = new MineCell[h][w];
+      for(MineCell[] row : board){
+        for(MineCell cell : row){
+          cell = new MineCell();
         }
       }
     }
@@ -124,7 +124,7 @@ public class MineBoard{
     target.open();
     if( target.isBomb() ) return BURNED;
     if( target.getNumber() == 0 ){
-      openAroundCell();
+      openAroundCell(x, y);
     }
 
     if( isGameover() ) return GAMEOVER;
