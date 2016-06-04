@@ -14,6 +14,10 @@ public class MineBoard{
 
   private MineCell[][] board;
 
+  public MineBoard(int w, int h){
+    init(w, h);
+  }
+
   public void init(int w, int h){
     if( w > 0 && h > 0 ){
       board = new MineCell[h][w];
