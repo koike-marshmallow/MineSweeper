@@ -98,16 +98,17 @@ implements MineBoardDrawable{
   }
 
   public boolean isGameover(){
+    boolean closed = false;
     for(MineCell[] row : board){
       for(MineCell cell : row){
         if( cell.isOpen() && cell.isBomb() ){
           return true;
         }else if( !cell.isOpen() && !cell.isBomb() ){
-          return false;
+          closed = true;
         }
       }
     }
-    return true;
+    return !closed;
   }
 
   void openAroundCell(int x, int y){
@@ -197,6 +198,15 @@ implements MineBoardDrawable{
         System.out.format("(%d,%d) - %s\n", i, j, tmp[j].toString());
       }
     }
+  }
+
+  public String toString(){
+    String head = "MineBoard@";
+    String cont = "";
+    cont += "(" + getWidth() + ", " + getHeight() + ")";
+    cont += " bomb=" + countBombCell();
+    cont += " isGameover=" + isGameover();
+    return head + "[" + cont + "]";
   }
 
 
