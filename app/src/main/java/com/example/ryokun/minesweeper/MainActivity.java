@@ -8,6 +8,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.example.ryokun.minesweeper.drawer.MineBoardViewDrawer;
+import com.example.ryokun.minesweeper.gamecore.MineBoard;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -15,23 +18,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        GridLayout board = new GridLayout(this);
-        board.setColumnCount(5);
-        board.setRowCount(5);
-        for(int i=0; i<25; i++){
-            ImageView view = new ImageView(this);
-            view.setImageResource(R.drawable.abc_ic_star_black_36dp);
-            board.addView(view);
-        }
+        MineBoard board = new MineBoard(5, 5);
+        MineBoardViewDrawer drawer = new MineBoardViewDrawer(board, this);
 
-        RelativeLayout p = (RelativeLayout)findViewById(R.id.parent);
-        p.addView(board);
+        View boardView = drawer.refresh(false);
+        RelativeLayout parent = (RelativeLayout)findViewById(R.id.parent);
+        parent.addView(boardView);
 
-        View testv = findViewById(R.id.testview);
-        testv.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                Toast.makeText(getApplicationContext(), "clicked!", Toast.LENGTH_SHORT).show();
-        }});
     }
 }
