@@ -24,9 +24,9 @@ implements MineBoardDrawable{
   public void init(int w, int h){
     if( w > 0 && h > 0 ){
       board = new MineCell[h][w];
-      for(MineCell[] row : board){
-        for(MineCell cell : row){
-          cell = new MineCell();
+      for(int i=0; i<board.length; i++){
+        for(int j=0; j<board[i].length; j++){
+          board[i][j] = new MineCell();
         }
       }
     }
@@ -188,6 +188,15 @@ implements MineBoardDrawable{
       }
     }
     return count;
+  }
+
+  public void printArray(){
+    for(int i=0; i<board.length; i++){
+      MineCell[] tmp = board[i];
+      for(int j=0; j<tmp.length; j++){
+        System.out.format("(%d,%d) - %s\n", i, j, tmp[j].toString());
+      }
+    }
   }
 
 
