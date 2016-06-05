@@ -103,6 +103,10 @@ public class MineBoardViewDrawer {
         return rootView;
     }
 
+    public View refresh(){
+        return refresh(false);
+    }
+
     public View getView(){
         return rootView;
     }
