@@ -21,8 +21,8 @@ public class MineBoardDrawer {
     return board;
   }
 
-  char getCellCharactor(int x, int y){
-    if( board.isCellOpen(x, y) ){
+  char getCellCharactor(int x, int y, boolean allopen){
+    if( board.isCellOpen(x, y) || allopen ){
       if( board.isCellBomb(x, y) ){
         return BOMB;
       }
@@ -38,7 +38,7 @@ public class MineBoardDrawer {
     return UNOPENED;
   }
 
-  public String generateString(){
+  public String generateString(boolean allopen){
     StringBuffer buffer = new StringBuffer();
     //header
     buffer.append("MS |");
@@ -53,7 +53,7 @@ public class MineBoardDrawer {
       buffer.append(String.format("%2d |", i));
       for(int j=0; j<board.getWidth(); j++){
         buffer.append(' ');
-        buffer.append(getCellCharactor(j, i));
+        buffer.append(getCellCharactor(j, i, allopen));
       }
       buffer.append("\n");
     }
@@ -61,8 +61,12 @@ public class MineBoardDrawer {
     return buffer.toString();
   }
 
-  public void printBoard(){
-    String boardstr = generateString();
+  public void printBoard(boolean allopen){
+    String boardstr = generateString(allopen);
     System.out.print(boardstr);
+  }
+
+  public void printBoard(){
+    printBoard(false);
   }
 }

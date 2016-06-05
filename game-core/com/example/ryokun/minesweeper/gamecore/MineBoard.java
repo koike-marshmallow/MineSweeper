@@ -65,7 +65,7 @@ implements MineBoardDrawable{
   int countAroundBombCell(int x, int y){
     int count = 0;
     for(int i=0; i<VEC_LENGTH; i++){
-      MineCell cell = get(x + VEC_X[i], y + VEC_X[i]);
+      MineCell cell = get(x + VEC_X[i], y + VEC_Y[i]);
       if( cell != null && cell.isBomb() ){
         count++;
       }
