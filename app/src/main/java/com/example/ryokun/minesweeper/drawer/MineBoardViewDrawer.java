@@ -2,7 +2,9 @@ package com.example.ryokun.minesweeper.drawer;
 
 import android.app.Activity;
 import android.graphics.Point;
+import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 
@@ -43,11 +45,14 @@ public class MineBoardViewDrawer {
         rootView = new GridLayout(parentActivity);
         rootView.setRowCount(board.getHeight());
         rootView.setColumnCount(board.getWidth());
+        rootView.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         views = new ImageView[board.getHeight()][board.getWidth()];
         for(int i=0; i<board.getHeight(); i++){
             for(int j=0; j<board.getWidth(); j++){
                 ImageView niv = new ImageView(parentActivity);
+                niv.setAdjustViewBounds(true);
                 rootView.addView(niv);
                 views[i][j] = niv;
             }
@@ -128,5 +133,13 @@ public class MineBoardViewDrawer {
             }
         }
         return null;
+    }
+
+    public void setCellWidth(int width){
+        for(ImageView[] row : views){
+            for(ImageView iv : row){
+                iv.setMaxWidth(width);
+            }
+        }
     }
 }
