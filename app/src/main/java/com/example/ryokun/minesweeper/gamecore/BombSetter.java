@@ -1,19 +1,20 @@
 package com.example.ryokun.minesweeper.gamecore;
 
-import java.awt.Point;
+import android.graphics.Point;
 
 public class BombSetter{
   public static int OVERFLOW = 10;
 
   static boolean isExclude(MineBoard board, Point target, Point exclude, boolean expand){
+    if( exclude == null ) return false;
     if( exclude != null && exclude.equals(target) ){
       return true;
     }else{
       if( expand ){
         for(int i=0; i<MineBoard.VEC_LENGTH; i++){
           Point tmp = new Point(exclude);
-          tmp.translate(MineBoard.VEC_X[i], MineBoard.VEC_Y[i]);
-          if( board.inBound((int)tmp.getX(), (int)tmp.getY()) ){
+          tmp.offset(MineBoard.VEC_X[i], MineBoard.VEC_Y[i]);
+          if( board.inBound(tmp.x, tmp.y) ){
             if( target.equals(tmp) ){
               return true;
             }
@@ -36,7 +37,7 @@ public class BombSetter{
       point.y = (int)(Math.random() * board.getHeight());
     }while(
       isExclude(board, point, exclude, true) ||
-      board.isCellBomb((int)point.getX(), (int)point.getY()) );
+      board.isCellBomb(point.x, point.y) );
     return point;
   }
 
@@ -44,7 +45,7 @@ public class BombSetter{
     Point exclude = board.inBound(ex, ey) ? new Point(ex, ey) : null;
     Point sp = randomSetPoint(board, exclude);
     if( sp != null ){
-      board.setBomb((int)sp.getX(), (int)sp.getY());
+      board.setBomb(sp.x, sp.y);
       return true;
     }else{
       return false;
