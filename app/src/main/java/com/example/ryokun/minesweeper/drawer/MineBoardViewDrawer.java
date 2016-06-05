@@ -1,6 +1,7 @@
 package com.example.ryokun.minesweeper.drawer;
 
 import android.app.Activity;
+import android.graphics.Point;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -104,5 +105,24 @@ public class MineBoardViewDrawer {
 
     public View getView(){
         return rootView;
+    }
+
+    public void setOnClickListener(View.OnClickListener listener){
+        for(ImageView[] row : views){
+            for(ImageView iv : row){
+                iv.setOnClickListener(listener);
+            }
+        }
+    }
+
+    public Point getPositionByView(View view){
+        for(int y=0; y<board.getHeight(); y++){
+            for(int x=0; x<board.getWidth(); x++){
+                if( getCellView(x, y) == view ){
+                    return new Point(x, y);
+                }
+            }
+        }
+        return null;
     }
 }

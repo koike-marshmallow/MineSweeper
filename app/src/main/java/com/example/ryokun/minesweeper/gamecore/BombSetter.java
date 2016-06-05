@@ -6,6 +6,7 @@ public class BombSetter{
   public static int OVERFLOW = 10;
 
   static boolean isExclude(MineBoard board, Point target, Point exclude, boolean expand){
+    if( exclude == null ) return false;
     if( exclude != null && exclude.equals(target) ){
       return true;
     }else{
