@@ -141,15 +141,16 @@ implements MineBoardDrawable{
   }
 
   public void setFlag(int x, int y, boolean f0){
-    if( inBound(x, y) ){
-      get(x, y).setFlag(f0);
+    MineCell cell = get(x, y);
+    if( cell != null && !cell.isOpen() ) {
+      cell.setFlag(f0);
     }
   }
 
   public boolean reverseFlag(int x, int y){
     MineCell cell = get(x, y);
     if( cell != null ){
-      cell.setFlag(!cell.getFlag());
+      setFlag(x, y, !cell.getFlag());
       return cell.getFlag();
     }
     return false;
