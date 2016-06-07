@@ -1,6 +1,9 @@
 package com.example.ryokun.minesweeper;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.Point;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,57 +23,68 @@ import com.example.ryokun.minesweeper.gamecore.BombSetter;
 import com.example.ryokun.minesweeper.gamecore.MineBoard;
 
 public class MainActivity extends AppCompatActivity {
-    static int boardWidth = 8;
-    static int boardHeight = 8;
-    static int bombCount = 10;
+    int boardWidth = 8;
+    int boardHeight = 8;
+    int bombCount = 10;
 
     MineBoard board;
     MineBoardViewDrawer drawer;
+
     TextView statusView;
+    LinearLayout boardWrapper;
+    int boardDisplayWidth;
+
     boolean openMode;
+
+    void initGame(){
+        board = new MineBoard(boardWidth, boardHeight);
+        drawer = new MineBoardViewDrawer(board, this);
+        drawer.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                boardCellPressed(view);
+            }
+        });
+        drawer.setCellWidth(boardDisplayWidth / board.getWidth());
+        boardWrapper.removeAllViews();
+        boardWrapper.addView(drawer.refresh());
+    }
+
+    void boardCellPressed(View view){
+        Point pos = drawer.getPositionByView(view);
+        if( pos != null && !board.isGameover() ) {
+            if (openMode) {
+                if( board.countBombCell() == 0 ){
+                    BombSetter.setBomb(board, pos.x, pos.y, bombCount);
+                    board.numbering();
+                }
+                board.open(pos.x, pos.y);
+            } else {
+                board.reverseFlag(pos.x, pos.y);
+            }
+        }
+        drawer.refresh(board.isGameover());
+        statusView.setText(String.format("爆弾: %d, 旗: %d",
+                board.countBombCell(), board.countFlagCell()));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        board = new MineBoard(boardWidth, boardHeight);
-        drawer = new MineBoardViewDrawer(board, this);
         statusView = (TextView)findViewById(R.id.statustext);
+        boardWrapper = (LinearLayout) findViewById(R.id.wrapboard);
+
+        initGame();
         openMode = true;
-        View boardView = drawer.refresh();
-        final LinearLayout parent = (LinearLayout) findViewById(R.id.wrapboard);
-        parent.addView(boardView);
-        ViewTreeObserver observer = parent.getViewTreeObserver();
+
+        ViewTreeObserver observer = boardWrapper.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(){
             @Override
-            public void onGlobalLayout() {
-                int parent_width = parent.getWidth();
-                drawer.setCellWidth(parent_width / board.getWidth());
-            }
-        });
-
-
-
-        drawer.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                Point pt = drawer.getPositionByView(view);
-
-                if( pt != null && !board.isGameover() ){
-                    if( openMode ) {
-                        if (board.countBombCell() == 0) {
-                            BombSetter.setBomb(board, pt.x, pt.y, bombCount);
-                            board.numbering();
-                        }
-                        board.open(pt.x, pt.y);
-                    }else{
-                        board.reverseFlag(pt.x, pt.y);
-                    }
-                }
-                drawer.refresh(board.isGameover());
-                statusView.setText(String.format("爆弾:%d 旗:%d",
-                        board.countBombCell(), board.countFlagCell()));
+            public void onGlobalLayout(){
+                boardDisplayWidth = boardWrapper.getWidth();
+                drawer.resizeCellWidth(boardDisplayWidth);
             }
         });
 
@@ -92,20 +106,42 @@ public class MainActivity extends AppCompatActivity {
         retryBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                retryGame();
+                initGame();
+            }
+        });
+
+        final Button levelBtn = (Button)findViewById(R.id.levelbtn);
+        levelBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                final String[] items = {"8 x 8", "12 x 12", "16 x 16"};
+                final int[] mWidth = {8, 12, 16};
+                final int[] mHeight = {8, 12, 16};
+                final int[] mBomb = {10, 20, 40};
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("難易度を選択")
+                        .setItems(items, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if( which >= 0 && which < Math.min(mWidth.length, mHeight.length) ){
+                                    boardWidth = mWidth[which];
+                                    boardHeight = mHeight[which];
+                                    bombCount = mBomb[which];
+                                    initGame();
+                                }
+                            }
+                        })
+                        .show();
             }
         });
 
     }
 
-    void retryGame(){
-        board.init(boardWidth, boardHeight);
-        drawer.refresh();
-        statusView.setText(String.format("爆弾:%d 旗:%d",
-                board.countBombCell(), board.countFlagCell()));
-    }
-
     void alert(String msg){
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    Activity getActivity(){
+        return this;
     }
 }

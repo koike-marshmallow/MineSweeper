@@ -40,4 +40,12 @@
         android:layout_alignParentEnd="true"
         android:src="@drawable/bicon_open" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="難易度選択"
+        android:id="@+id/levelbtn"
+        android:layout_below="@+id/wrapboard"
+        android:layout_toEndOf="@+id/retrybtn" />
+
 </RelativeLayout>
