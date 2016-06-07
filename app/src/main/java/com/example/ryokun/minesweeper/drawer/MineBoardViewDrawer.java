@@ -142,4 +142,8 @@ public class MineBoardViewDrawer {
             }
         }
     }
+
+    public void resizeCellWidth(int maxWidth){
+        setCellWidth(maxWidth / board.getWidth());
+    }
 }
