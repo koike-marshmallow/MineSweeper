@@ -23,9 +23,11 @@ import com.example.ryokun.minesweeper.gamecore.BombSetter;
 import com.example.ryokun.minesweeper.gamecore.MineBoard;
 
 public class MainActivity extends AppCompatActivity {
-    int boardWidth = 8;
-    int boardHeight = 8;
-    int bombCount = 10;
+    LevelConfig[] levels = {
+            new LevelConfig("easy1", "8 x 8", 8, 8, 10),
+            new LevelConfig("easy2", "12 x 12", 12, 12, 20),
+            new LevelConfig("normal1", "16 x 16", 16, 16, 40)
+    };
 
     MineBoard board;
     MineBoardViewDrawer drawer;
@@ -34,10 +36,11 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout boardWrapper;
     int boardDisplayWidth;
 
+    int level = 0;
     boolean openMode;
 
     void initGame(){
-        board = new MineBoard(boardWidth, boardHeight);
+        board = new MineBoard(levels[level].columnCount, levels[level].rowCount);
         drawer = new MineBoardViewDrawer(board, this);
         drawer.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -55,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         if( pos != null && !board.isGameover() ) {
             if (openMode) {
                 if( board.countBombCell() == 0 ){
-                    BombSetter.setBomb(board, pos.x, pos.y, bombCount);
+                    BombSetter.setBomb(board, pos.x, pos.y, levels[level].bombCount);
                     board.numbering();
                 }
                 board.open(pos.x, pos.y);
@@ -114,19 +117,17 @@ public class MainActivity extends AppCompatActivity {
         levelBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                final String[] items = {"8 x 8", "12 x 12", "16 x 16"};
-                final int[] mWidth = {8, 12, 16};
-                final int[] mHeight = {8, 12, 16};
-                final int[] mBomb = {10, 20, 40};
+                String[] labels = new String[levels.length];
+                for(int i=0; i<levels.length; i++){
+                    labels[i] = levels[i].label;
+                }
                 new AlertDialog.Builder(getActivity())
                         .setTitle("難易度を選択")
-                        .setItems(items, new DialogInterface.OnClickListener() {
+                        .setItems(labels, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if( which >= 0 && which < Math.min(mWidth.length, mHeight.length) ){
-                                    boardWidth = mWidth[which];
-                                    boardHeight = mHeight[which];
-                                    bombCount = mBomb[which];
+                                if( which >= 0 && which < levels.length ){
+                                    level = which;
                                     initGame();
                                 }
                             }
@@ -143,5 +144,21 @@ public class MainActivity extends AppCompatActivity {
 
     Activity getActivity(){
         return this;
+    }
+
+    class LevelConfig{
+        public String key;
+        public String label;
+        public int rowCount;
+        public int columnCount;
+        public int bombCount;
+
+        public LevelConfig(String k, String l, int r, int c, int b){
+            key = k;
+            label = l;
+            rowCount = r;
+            columnCount = c;
+            bombCount = b;
+        }
     }
 }
