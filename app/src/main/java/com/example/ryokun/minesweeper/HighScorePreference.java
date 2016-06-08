@@ -3,6 +3,7 @@ package com.example.ryokun.minesweeper;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +31,7 @@ public class HighScorePreference {
                 tmp = (Integer)data.get(key);
                 scores.put(key, tmp);
             }catch(Exception e0){
+                Log.e("LoadScore", "ClassCastException: key=" + key);
                 result = false;
             }
         }
